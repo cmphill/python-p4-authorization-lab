@@ -18,6 +18,12 @@ db.init_app(app)
 
 api = Api(app)
 
+@app.before_request
+def check_if_logged_in():
+    if not session['user_id'] \
+        and request.endpoint == ['member_article', 'member_index']:
+        return {'error': '401 Unauthorized'}, 401
+    
 class ClearSession(Resource):
 
     def delete(self):
